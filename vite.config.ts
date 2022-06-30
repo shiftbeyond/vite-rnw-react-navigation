@@ -1,6 +1,6 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import { viteCommonjs } from "@originjs/vite-plugin-commonjs";
+import { viteCommonjs, esbuildCommonjs } from "@originjs/vite-plugin-commonjs";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -8,9 +8,11 @@ export default defineConfig({
     global: "window",
   },
   optimizeDeps: {
+    include: ["@react-navigation/native"],
     esbuildOptions: {
       mainFields: ["module", "main"],
       resolveExtensions: [".web.js", ".js", ".ts"],
+      plugins: [esbuildCommonjs(["@react-navigation/elements"])],
     },
   },
   resolve: {
@@ -20,4 +22,9 @@ export default defineConfig({
     },
   },
   plugins: [viteCommonjs(), react()],
+  build: {
+    commonjsOptions: {
+      transformMixedEsModules: true,
+    },
+  },
 });
